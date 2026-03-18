@@ -35,6 +35,7 @@ header {
     padding-right: 15px;
     height: 0px;
     
+    
 
 }
 
@@ -140,28 +141,34 @@ nav>.browse-btn:hover {
     background-color: #17141f;
 }
 
-.genre-section {
+.browse-section {
     background-color: #17141f;
     padding-top: 45px;
     padding-bottom: 45px;
-    position: relative;
-    margin-top: -70px;
+    /* position: absolute; */
+    /* margin-top: -70px; */
     opacity: 0.0;
     transition: opacity 0.3s ease;
     pointer-events: none;
-
+    top: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
 
     
-
 }
 
-.genre-section.selected {
+.browse-section.selected {
     opacity: 1;
     pointer-events: auto;
+    
+
 
 }
 
-.genre-btn-container {
+.browse-btn-container {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
@@ -169,7 +176,7 @@ nav>.browse-btn:hover {
     
 }
 
-.genre-btn-container>button {
+.browse-btn-container>button {
     background-color: #dc2d43;
     border: solid #dc2d43 2px;
     border-radius: 5px;
@@ -179,4 +186,6 @@ nav>.browse-btn:hover {
     width: 140px;
     height: 40px;
     font-size: 17px;
+    cursor: pointer;
 }
+

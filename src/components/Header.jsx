@@ -4,9 +4,28 @@ export default function Header() {
 
     const [searchSelected, setSearchSelected] = useState(false)
     const [genreSelected, setGenreSelected] = useState(false)
+    const [dateSelected, setDateSelected] = useState(false)
 
     function handleClickGenre() {
-        setGenreSelected(!genreSelected)
+
+        const genreSelectedState = genreSelected;
+        const dateSelectedState = dateSelected;
+
+        setGenreSelected(!genreSelectedState)
+        dateSelectedState ? setDateSelected(false) : ""
+        //if date is selected set false
+
+
+
+    }
+
+    function handleClickDate() {
+        const genreSelectedState = genreSelected;
+        const dateSelectedState = dateSelected;
+        // saving the above two values because this is asynchronus
+        setDateSelected(!dateSelectedState)
+        genreSelectedState ? setGenreSelected(false) : ""
+
     }
 
     return (
@@ -19,7 +38,7 @@ export default function Header() {
                     </a>
                     <nav className="navbar">
                         <button onClick={handleClickGenre} className={genreSelected ? "browse-btn selected" : "browse-btn"}>BROWSE BY GENRE</button>
-                        <button className="browse-btn">BROWSE BY DATE</button>
+                        <button onClick={handleClickDate} className={dateSelected ? "browse-btn selected" : "browse-btn"}>BROWSE BY DATE</button>
                     </nav>
                 </div>
             </section>
@@ -36,21 +55,38 @@ export default function Header() {
                     </div>
                 </div>
             </section>
-            <section className={genreSelected ? "genre-section selected" : "genre-section"}>
-                <div className="header-section-content">
-                    <div className="genre-btn-container">
-                        <button>Genre</button>
-                        <button>Genre</button>
-                        <button>Genre</button>
-                        <button>Genre</button>
-                        <button>Genre</button>
-                        <button>Genre</button>
-                        <button>Genre</button>
-                        <button>Genre</button>
-                        <button>Genre</button>
+            
+                <section className={genreSelected ? "browse-section selected" : "browse-section"}>
+                    <div className="header-section-content">
+                        <div className="browse-btn-container">
+                            <button>Genre</button>
+                            <button>Genre</button>
+                            <button>Genre</button>
+                            <button>Genre</button>
+                            <button>Genre</button>
+                            <button>Genre</button>
+                            <button>Genre</button>
+                            <button>Genre</button>
+                            <button>Genre</button>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+                <section className={dateSelected ? "browse-section selected" : "browse-section"}>
+                    <div className="header-section-content">
+                        <div className="browse-btn-container">
+                            <button>Date</button>
+                            <button>Date</button>
+                            <button>Date</button>
+                            <button>Date</button>
+                            <button>Date</button>
+                            <button>Date</button>
+                            <button>Date</button>
+                            <button>Date</button>
+                            <button>Date</button>
+                        </div>
+                    </div>
+                </section>
+            
         </header>
     )
 }
