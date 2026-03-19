@@ -21,8 +21,6 @@ header {
 
 }
 
-
-
 .header-section-content {
     display: flex;
     flex-direction: row;
@@ -34,8 +32,8 @@ header {
     padding-left: 15px;
     padding-right: 15px;
     height: 0px;
-    
-    
+
+
 
 }
 
@@ -57,12 +55,12 @@ header {
     font-size: medium;
     color: #dedede;
     font-weight: 100;
-    
+
 }
 
 .navbar {
     height: 100%;
-    
+
 
 }
 
@@ -86,6 +84,7 @@ nav>.browse-btn:hover {
     color: #dc2d43;
     /* Above is background colour for the drop down when implemented */
 }
+
 .browse-btn.selected {
     background-color: #17141f;
 
@@ -157,13 +156,13 @@ nav>.browse-btn:hover {
     position: absolute;
     width: 100%;
 
-    
+
 }
 
 .browse-section.selected {
     opacity: 1;
     pointer-events: auto;
-    
+
 
 
 }
@@ -173,7 +172,7 @@ nav>.browse-btn:hover {
     gap: 10px;
     flex-wrap: wrap;
     /* height: 500px; */
-    
+
 }
 
 .browse-btn-container>button {
@@ -188,4 +187,3 @@ nav>.browse-btn:hover {
     font-size: 17px;
     cursor: pointer;
 }
-
