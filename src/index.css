@@ -3,7 +3,8 @@ body,
     margin: 0;
     padding: 0;
     font-family: "Muli", sans-serif;
-    background-color: black;
+    background-color: #13101A;
+
     color: white;
 }
 
@@ -18,6 +19,7 @@ header {
     /* background-color: #13101a; */
     width: 100%;
     position: relative;
+    margin-bottom: 15px;
 
 }
 
@@ -138,6 +140,8 @@ nav>.browse-btn:hover {
 
 .searchbar-section {
     background-color: #17141f;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
+
 }
 
 .browse-section {
@@ -186,4 +190,45 @@ nav>.browse-btn:hover {
     height: 40px;
     font-size: 17px;
     cursor: pointer;
+}
+
+.book-card {
+    border: solid white 2px;
+    display: flex;
+    flex-direction: row;
+    width: 300px;
+    background-color: #1a1824;
+    border-radius: 5px;
+}
+
+.book-card-text {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.book-card-text>h2 {
+    margin-bottom: 0px;
+}
+
+.book-card-text>p {
+    margin-top: 0px;
+}
+
+.book-card>img {
+    width: 125px;
+    /* height: 200px; */
+}
+
+.books-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    
+    flex-direction: row;
+    gap: 10px;
+    padding-left: 15px;
+}
+
+.author {
+    font-style: italic;
+    
 }
