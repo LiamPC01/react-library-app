@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-export default function Header() {
+export default function Header({setSearchQuery}) { //{setSearchQuery} rather than typing props as a parameter and then having to do props.setSearchQuery()
 
     const [searchSelected, setSearchSelected] = useState(false)
     const [genreSelected, setGenreSelected] = useState(false)
@@ -51,6 +51,7 @@ export default function Header() {
                         <input type="text" className="searchbar" placeholder="Search for a book"
                             onFocus={() => setSearchSelected(true)}
                             onBlur={() => setSearchSelected(false)}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
                 </div>

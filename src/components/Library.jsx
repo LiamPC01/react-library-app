@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 
-export default function Library() {
+export default function Library({ searchQuery }) {
 
     const [defaultBooksData, setdefaultBooksData] = useState([
         {
@@ -35,16 +35,34 @@ export default function Library() {
         }
     ])
 
-    const [searchQuery, setSearchQuery] = useState("") //update search query each keystroke
-    const [searchResults, setSearchResults] = useState([]) //store x amount of books from api to be rendered if searchquery is not empty
+    const [SearchResultsData, setSearchResultsDataDataDataData] = useState([]) //store x amount of books from api to be rendered if searchquery is not empty
 
 
-    // console.log("Rendered!")
-    // useEffect(() => {
-    //     fetch("https://www.googleapis.com/books/v1/volumes?q=deep+work&key=AIzaSyAFh3jqb7IGPoTrh4q8q1WrVOuFmQsvdis")
-    //         .then(res => res.json())
-    //         .then(data => console.log(data))
-    // },[])
+    useEffect(() => {
+        if (!searchQuery) {
+            setSearchResultsDataDataDataData([])
+            return
+        }
+        const searchFormatted = searchQuery.split(" ").join("+")
+        fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchFormatted}&key=AIzaSyAFh3jqb7IGPoTrh4q8q1WrVOuFmQsvdis`)
+            .then(res => res.json())
+            .then(data => {
+                if (!data.items) {
+                    setSearchResultsDataDataDataData([])
+                    return
+                }
+                const books = data.items.map(item => ({
+                    id: item.id,
+                    title: item.volumeInfo.title,
+                    author: item.volumeInfo.authors?.[0] || "Unknown Author",
+                    subtitle: item.volumeInfo.subtitle || "",
+                    thumbnail: item.volumeInfo.imageLinks?.thumbnail
+                }))
+                setSearchResultsDataDataDataData(books)
+            })
+        console.log(SearchResultsData)
+
+    }, [searchQuery])
 
     const defaultBooks = defaultBooksData.map(book => (
         <div className="book-card" key={book.id}>
@@ -59,6 +77,16 @@ export default function Library() {
         </div>
     ))
 
+    const searchResults = SearchResultsData.map(book => (
+        <div className="book-card" key={book.id}>
+            <img src={book.thumbnail}></img>
+            <div className="book-card-text">
+                <h2>{book.title}</h2>
+                <p className="author">{book.author}</p>
+                <p>{book.subtitle}</p>
+            </div>
+        </div>
+    ))
     // render an array of books called editors picks if there is no input within the search bar
     // if there is data in the search bar then the title should change to (search result for "search") and the books rendered should be some of the items returned from the api
     //editors picks does not need to be in state as it does not change?
@@ -69,6 +97,12 @@ export default function Library() {
                 <h1> Editors Picks</h1>
                 <section className="books-card-container">
                     {defaultBooks}
+                </section>
+            </div>}
+            {searchResults && <div>
+                <h1> Search Results</h1>
+                <section className="books-card-container">
+                    {searchResults}
                 </section>
             </div>}
         </>

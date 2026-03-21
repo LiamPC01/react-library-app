@@ -5,10 +5,12 @@ import Library from "./components/Library.jsx"
 
 function App() {
 
+  const [searchQuery, setSearchQuery] = useState("")
+
   return (
     <main>
-      <Header />
-      <Library/>
+      <Header setSearchQuery={setSearchQuery}/>
+      <Library searchQuery={searchQuery}/>
     </main>
 
   )

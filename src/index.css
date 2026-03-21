@@ -216,7 +216,7 @@ nav>.browse-btn:hover {
 
 .book-card>img {
     width: 125px;
-    /* height: 200px; */
+    height: 200px;
 }
 
 .books-card-container {
