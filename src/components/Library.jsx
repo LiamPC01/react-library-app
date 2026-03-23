@@ -35,20 +35,35 @@ export default function Library({ searchQuery }) {
         }
     ])
 
-    const [SearchResultsData, setSearchResultsDataDataDataData] = useState([]) //store x amount of books from api to be rendered if searchquery is not empty
+    const [SearchResultsData, setSearchResultsData] = useState([])
+
+    const [pageIndex, setPageIndex] = useState(0)
+
+    // Clear books shown if searchquery changes and input is empty or whitespace
+    useEffect(() => {
+        if (!searchQuery.trim()) {
+            setSearchResultsData([])
+            return
+        }
+        setPageIndex(0)
+        setSearchResultsData([])
+
+
+    }, [searchQuery])
+
 
 
     useEffect(() => {
         if (!searchQuery) {
-            setSearchResultsDataDataDataData([])
+            setSearchResultsData([])
             return
         }
         const searchFormatted = searchQuery.split(" ").join("+")
-        fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchFormatted}&key=AIzaSyAFh3jqb7IGPoTrh4q8q1WrVOuFmQsvdis`)
+        fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchFormatted}&key=AIzaSyAFh3jqb7IGPoTrh4q8q1WrVOuFmQsvdis&maxResults=10&startIndex=${pageIndex}`)
             .then(res => res.json())
             .then(data => {
                 if (!data.items) {
-                    setSearchResultsDataDataDataData([])
+                    setSearchResultsData([])
                     return
                 }
                 const books = data.items.map(item => ({
@@ -58,17 +73,16 @@ export default function Library({ searchQuery }) {
                     subtitle: item.volumeInfo.subtitle || "",
                     thumbnail: item.volumeInfo.imageLinks?.thumbnail
                 }))
-                setSearchResultsDataDataDataData(books)
+                setSearchResultsData(prev => [...prev, ...books])
             })
-        console.log(SearchResultsData)
 
-    }, [searchQuery])
+    }, [searchQuery, pageIndex])
 
     const defaultBooks = defaultBooksData.map(book => (
         <div className="book-card" key={book.id}>
             <img src={book.thumbnail}></img>
             <div className="book-card-text">
-                <h2>{book.title}</h2>
+                <h3>{book.title}</h3>
                 <p className="author">{book.author}</p>
                 <p>{book.subtitle}</p>
             </div>
@@ -81,29 +95,33 @@ export default function Library({ searchQuery }) {
         <div className="book-card" key={book.id}>
             <img src={book.thumbnail}></img>
             <div className="book-card-text">
-                <h2>{book.title}</h2>
+                <h3>{book.title}</h3>
                 <p className="author">{book.author}</p>
                 <p>{book.subtitle}</p>
             </div>
         </div>
     ))
-    // render an array of books called editors picks if there is no input within the search bar
-    // if there is data in the search bar then the title should change to (search result for "search") and the books rendered should be some of the items returned from the api
-    //editors picks does not need to be in state as it does not change?
-    //search results array that contains say 10 results
+
+
+    function handleLoadBooks() {
+        setPageIndex(prev => prev + 10)
+    }
     return (
         <>
-            {!searchQuery && <div>
-                <h1> Editors Picks</h1>
+            {!searchQuery && <div className="book-card-parent-container">
+                <h1>Editors Picks</h1>
                 <section className="books-card-container">
                     {defaultBooks}
                 </section>
+                <button className="load-btn">Load More Books</button>
             </div>}
-            {searchResults && <div>
-                <h1> Search Results</h1>
+
+            {searchQuery && <div className="book-card-parent-container">
+                <h1>Search Results</h1>
                 <section className="books-card-container">
                     {searchResults}
                 </section>
+                <button onClick={handleLoadBooks} className="load-btn">LOAD MORE BOOKS</button>
             </div>}
         </>
 
