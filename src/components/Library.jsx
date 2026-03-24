@@ -59,7 +59,7 @@ export default function Library({ searchQuery }) {
             return
         }
         const searchFormatted = searchQuery.split(" ").join("+")
-        fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchFormatted}&key=AIzaSyAFh3jqb7IGPoTrh4q8q1WrVOuFmQsvdis&maxResults=10&startIndex=${pageIndex}`)
+        fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchFormatted}&orderBy=newest&key=AIzaSyAFh3jqb7IGPoTrh4q8q1WrVOuFmQsvdis&maxResults=10&startIndex=${pageIndex}`)
             .then(res => res.json())
             .then(data => {
                 if (!data.items) {
@@ -71,15 +71,28 @@ export default function Library({ searchQuery }) {
                     title: item.volumeInfo.title,
                     author: item.volumeInfo.authors?.[0] || "Unknown Author",
                     subtitle: item.volumeInfo.subtitle || "",
-                    thumbnail: item.volumeInfo.imageLinks?.thumbnail
+                    thumbnail: item.volumeInfo.imageLinks?.thumbnail,
+                    ratingsCount: item.volumeInfo.ratingsCount,
+                    averageRating: item.volumeInfo.averageRating
                 }))
-                setSearchResultsData(prev => [...prev, ...books])
+
+                const filteredBooks = books.filter(book => book.ratingsCount >= 5 && book.averageRating >= 3)
+                // check book is not already saved in searchResults before setting
+
+                setSearchResultsData(prev => {
+                    const existingIds = new Set(prev.map(book => book.id)) // list existing ids
+
+                    const newBooks = filteredBooks.filter ( // create new array without existing ids
+                        book => !existingIds.has(book.id) 
+                    )
+                    return [...prev, ...newBooks] //return new books not already in results
+                })
             })
 
     }, [searchQuery, pageIndex])
 
     const defaultBooks = defaultBooksData.map(book => (
-        <div className="book-card" key={book.id}>
+        <div className="book-card" key={`{book.id}-${book.title}`}>
             <img src={book.thumbnail}></img>
             <div className="book-card-text">
                 <h3>{book.title}</h3>
