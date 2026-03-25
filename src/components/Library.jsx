@@ -39,33 +39,32 @@ export default function Library({ searchQuery }) {
 
     const [pageIndex, setPageIndex] = useState(0)
 
-    // Clear books shown if searchquery changes and input is empty or whitespace
+
+
+
+    // &startIndex=${pageIndex}
+
+
+    // Runs when search query changes
     useEffect(() => {
+
+
+        //if searchquery is empty, clear search results
         if (!searchQuery.trim()) {
             setSearchResultsData([])
             return
         }
-        setPageIndex(0)
-        setSearchResultsData([])
 
-
-    }, [searchQuery])
-
-
-
-    useEffect(() => {
-        if (!searchQuery) {
-            setSearchResultsData([])
-            return
-        }
         const searchFormatted = searchQuery.split(" ").join("+")
-        fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchFormatted}&orderBy=newest&key=AIzaSyAFh3jqb7IGPoTrh4q8q1WrVOuFmQsvdis&maxResults=10&startIndex=${pageIndex}`)
+        fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchFormatted}&orderBy=newest&key=AIzaSyAFh3jqb7IGPoTrh4q8q1WrVOuFmQsvdis&maxResults=10`)
             .then(res => res.json())
             .then(data => {
                 if (!data.items) {
                     setSearchResultsData([])
                     return
                 }
+                //there are books, make an array of them
+
                 const books = data.items.map(item => ({
                     id: item.id,
                     title: item.volumeInfo.title,
@@ -76,20 +75,28 @@ export default function Library({ searchQuery }) {
                     averageRating: item.volumeInfo.averageRating
                 }))
 
+                //make an array of the books with reviews
                 const filteredBooks = books.filter(book => book.ratingsCount >= 5 && book.averageRating >= 3)
-                // check book is not already saved in searchResults before setting
 
+
+
+
+                //check book is not already saved in searchResults before setting
                 setSearchResultsData(prev => {
                     const existingIds = new Set(prev.map(book => book.id)) // list existing ids
 
-                    const newBooks = filteredBooks.filter ( // create new array without existing ids
-                        book => !existingIds.has(book.id) 
+                    const newBooks = filteredBooks.filter( // create new array without existing ids
+                        book => !existingIds.has(book.id)
                     )
                     return [...prev, ...newBooks] //return new books not already in results
                 })
             })
 
-    }, [searchQuery, pageIndex])
+    }, [searchQuery])
+
+
+
+
 
     const defaultBooks = defaultBooksData.map(book => (
         <div className="book-card" key={`{book.id}-${book.title}`}>
@@ -116,9 +123,9 @@ export default function Library({ searchQuery }) {
     ))
 
 
-    function handleLoadBooks() {
-        setPageIndex(prev => prev + 10)
-    }
+    // function handleLoadBooks() {
+    //     setPageIndex(prev => prev + 10)
+    // }
     return (
         <>
             {!searchQuery && <div className="book-card-parent-container">
@@ -126,7 +133,6 @@ export default function Library({ searchQuery }) {
                 <section className="books-card-container">
                     {defaultBooks}
                 </section>
-                <button className="load-btn">Load More Books</button>
             </div>}
 
             {searchQuery && <div className="book-card-parent-container">
@@ -134,7 +140,7 @@ export default function Library({ searchQuery }) {
                 <section className="books-card-container">
                     {searchResults}
                 </section>
-                <button onClick={handleLoadBooks} className="load-btn">LOAD MORE BOOKS</button>
+                {/* <button onClick={handleLoadBooks} className="load-btn">LOAD MORE BOOKS</button> */}
             </div>}
         </>
 
