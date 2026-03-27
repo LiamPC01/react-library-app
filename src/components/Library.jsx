@@ -37,73 +37,43 @@ export default function Library({ searchQuery }) {
 
     const [SearchResultsData, setSearchResultsData] = useState([])
 
-    const [pageIndex, setPageIndex] = useState(0)
-
-
-
-    let startIndex = 0
-    const target = 20
-    const delay = ms => new Promise(res => setTimeout(res, ms));
-
-
     async function fetchBooks() {
 
-        
+        console.log("fetch")
+        const searchFormatted = searchQuery.split(" ").join("+")
+        let response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchFormatted}&orderBy=newest&key=AIzaSyAFh3jqb7IGPoTrh4q8q1WrVOuFmQsvdis&maxResults=20`)
+        let data = await response.json()
 
-        while (startIndex < target) {
-            console.log("fetch")
-            const searchFormatted = searchQuery.split(" ").join("+")
-            let response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchFormatted}&orderBy=newest&key=AIzaSyAFh3jqb7IGPoTrh4q8q1WrVOuFmQsvdis&maxResults=10&startIndex=${startIndex}`)
-
-            if (response.status === 429) {
-                console.log("429 error. Delaying...");
-                await delay(1500);
-                continue;
-            }
-
-            let data = await response.json()
-
-
-            if (!data.items) {
-                setSearchResultsData([])
-                return
-            }
-            //there are books, make an array of them
-            const books = data.items.map(item => ({
-                id: item.id,
-                title: item.volumeInfo.title,
-                author: item.volumeInfo.authors?.[0] || "Unknown Author",
-                subtitle: item.volumeInfo.subtitle || "",
-                thumbnail: item.volumeInfo.imageLinks?.thumbnail,
-                ratingsCount: item.volumeInfo.ratingsCount,
-                averageRating: item.volumeInfo.averageRating
-            }))
-            //make an array of the books with reviews
-            const filteredBooks = books.filter(book => book.ratingsCount >= 5 && book.averageRating >= 3)
-
-
-            setSearchResultsData(prev => {
-                const existingIds = new Set(prev.map(book => book.id)) // list existing ids
-
-                const newBooks = filteredBooks.filter( // create new array without existing ids
-                    book => !existingIds.has(book.id)
-                )
-                return [...prev, ...newBooks] //return new books not already in results
-            })
-            if(SearchResultsData.length > 1) {
-                break
-            }
-
-            startIndex += 10
-
+        if (!data.items) {
+            setSearchResultsData([])
+            return
         }
 
+        //there are books, make an array of them
+        const books = data.items.map(item => ({
+            id: item.id,
+            title: item.volumeInfo.title,
+            author: item.volumeInfo.authors?.[0] || "Unknown Author",
+            subtitle: item.volumeInfo.subtitle || "",
+            thumbnail: item.volumeInfo.imageLinks?.thumbnail,
+            ratingsCount: item.volumeInfo.ratingsCount,
+            averageRating: item.volumeInfo.averageRating
+        }))
+        //make an array of the books with reviews
+        const filteredBooks = books.filter(book => book.ratingsCount >= 5 && book.averageRating >= 3)
 
+
+        setSearchResultsData(prev => {
+            const existingIds = new Set(prev.map(book => book.id)) // list existing ids
+
+            const newBooks = filteredBooks.filter( // create new array without existing ids
+                book => !existingIds.has(book.id)
+            )
+            return [...prev, ...newBooks] //return new books not already in results
+        })
+        
 
     }
-
-    // &startIndex=${pageIndex}
-
 
     // Runs when search query changes
     useEffect(() => {
@@ -114,9 +84,6 @@ export default function Library({ searchQuery }) {
         }
 
     }, [searchQuery])
-
-
-
 
 
     const defaultBooks = defaultBooksData.map(book => (
@@ -144,9 +111,10 @@ export default function Library({ searchQuery }) {
     ))
 
 
-    // function handleLoadBooks() {
-    //     setPageIndex(prev => prev + 10)
-    // }
+    function handleLoadBooks() {
+        console.log("loadBooks")
+        
+    }
     return (
         <>
             {!searchQuery && <div className="book-card-parent-container">
@@ -161,7 +129,7 @@ export default function Library({ searchQuery }) {
                 <section className="books-card-container">
                     {searchResults}
                 </section>
-                {/* <button onClick={handleLoadBooks} className="load-btn">LOAD MORE BOOKS</button> */}
+                {<button onClick={handleLoadBooks} className="load-btn">LOAD MORE BOOKS</button>}
             </div>}
         </>
 
