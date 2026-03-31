@@ -22,14 +22,14 @@ export default function Library({ searchQuery }) {
         {
             title: "Tarzan of the Apes",
             author: "Edgar Rice Burroughs",
-            subtitle: "tarzan Description blah blah blah",
+            subtitle: "1888 W Africa. Newlyweds Lord and Lady Greystoke are marooned by mutineers. He builds a snug cabin for their growing family.",
             thumbnail: "https://books.google.com/books/content?id=2NRFq7hw4f0C&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
             id: "003"
         },
         {
             title: "The Inheritors",
             author: "William Golding",
-            subtitle: "Inheritors description blah blah blah",
+            subtitle: "From the author of Lord of the Flies, The Inheritors is a startling recreation of the lost world of the Neanderthals, and a frightening vision of the beginning of a new age.",
             thumbnail: "https://books.google.com/books/content?id=Ok-DaBj7GqMC&printsec=frontcover&img=1&zoom=1&source=gbs_api",
             id: "004"
         }
@@ -72,7 +72,6 @@ export default function Library({ searchQuery }) {
             return [...prev, ...newBooks] //return new books not already in results
         })
         
-
     }
 
     // Runs when search query changes
